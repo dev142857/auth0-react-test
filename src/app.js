@@ -10,6 +10,7 @@ import { NotFoundPage } from "./pages/not-found-page";
 import { ProfilePage } from "./pages/profile-page";
 import { ProtectedPage } from "./pages/protected-page";
 import { PublicPage } from "./pages/public-page";
+import PaintPage from "./pages/paint-page";
 
 export const App = () => {
   const { isLoading } = useAuth0();
@@ -38,6 +39,7 @@ export const App = () => {
         path="/admin"
         element={<AuthenticationGuard component={AdminPage} />}
       />
+      <Route path="/paint" element={<PaintPage />} />
       <Route path="/callback" element={<CallbackPage />} />
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
