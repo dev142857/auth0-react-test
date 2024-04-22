@@ -13,12 +13,18 @@ const PaintPage = () => {
   //     return null;
   //   }
   const [selBrush, setSelBrush] = useState(1);
-  const settings = useRef({
+  let settings = useRef({
     stroke: 20,
     color: "#000",
     mode: selBrush,
   });
-  console.log(settings);
+  useEffect(() => {
+    settings.current = {
+      stroke: 20,
+      color: "#000",
+      mode: selBrush,
+    };
+  }, [selBrush]);
   let lastPath = [];
   const size = useWindowSize();
   const [showModal, setShowModal] = useState(false);
@@ -125,23 +131,24 @@ const PaintPage = () => {
 
   const onPointerMove = (e) => {
     prevent(e);
-    if (moving.current) return onCanvasMove(e, context.current);
+    const ctx = getContext(settings);
+    if (moving.current) return onCanvasMove(e, ctx);
     if (!draw.current) return;
-    const point = getPoints(e, context.current);
-    const ctx = getContext(settings.current);
+    const point = getPoints(e, ctx);
     drawModes(settings.current.mode, ctx, point, lastPath);
   };
 
   const drawModes = (mode, ctx, point, path) => {
-    // console.log(ctx);
     switch (mode) {
       case MODES.PEN:
         ctx.lineWidth = 2;
+        ctx.shadowBlur = 0;
         point ? previewPen(point, ctx) : drawPen(path, ctx);
         break;
       case MODES.BRUSH:
         ctx.lineJoin = ctx.lineCap = "round";
         ctx.lineWidth = 10;
+        ctx.shadowBlur = 0;
         // ctx.shadowBlur = 10;
         // ctx.shadowColor = "rgb(0, 0, 0)";
         if (point) {
@@ -153,7 +160,7 @@ const PaintPage = () => {
       case MODES.SHADOW:
         ctx.lineJoin = ctx.lineCap = "round";
         ctx.lineWidth = 10;
-        ctx.shadowBlur = 10;
+        ctx.shadowBlur = 5;
         ctx.shadowColor = "rgb(0, 0, 0)";
         if (point) {
           previewPen(point, ctx);
