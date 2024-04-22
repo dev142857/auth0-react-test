@@ -1,3 +1,14 @@
 @import "theme.css";
 @import "general.css";
 @import "components/index.css";
+/* src/index.css */
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+.paint-header-icon {
+    cursor: pointer;
+}
+.paint-board {
+    height: 500px;
+}
