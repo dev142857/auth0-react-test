@@ -15,7 +15,7 @@ const PaintPage = () => {
   const settings = useRef({
     stroke: 20,
     color: "#000",
-    mode: MODES.PEN,
+    mode: MODES.SHADOW,
   });
   let lastPath = [];
   const size = useWindowSize();
@@ -126,20 +126,24 @@ const PaintPage = () => {
     if (moving.current) return onCanvasMove(e, context.current);
     if (!draw.current) return;
     const point = getPoints(e, context.current);
-    drawModes(settings.current.mode, context.current, point, lastPath);
+    const ctx = getContext(settings.current);
+    drawModes(settings.current.mode, ctx, point, lastPath);
   };
 
   const drawModes = (mode, ctx, point, path) => {
+    console.log(ctx);
     switch (mode) {
       case MODES.PEN:
         point ? previewPen(point, ctx) : drawPen(path, ctx);
         break;
-      case MODES.RECT:
+      case MODES.SHADOW:
+        ctx.lineJoin = ctx.lineCap = "butt";
+        // ctx.shadowBlur = 10;
+        // ctx.shadowColor = "rgb(0, 0, 0)";
         if (point) {
-          path.length === 0 ? (path[0] = point) : (path[1] = point);
-          previewRect(path, ctx);
+          previewPen(point, ctx);
         } else {
-          drawRect(path, ctx);
+          drawPen(path, ctx);
         }
         break;
       case MODES.CIRCLE:
@@ -174,22 +178,16 @@ const PaintPage = () => {
     return [e.clientX - rect.x - dx, e.clientY - rect.y - dy];
   };
 
-  const previewRect = (path, ctx) => {
-    if (path.length < 2) return;
-    drawCanvas(ctx);
-    drawRect(path, getContext(settings.current, ctx));
-  };
-
-  const drawRect = (path, ctx) => {
-    ctx.beginPath();
-    ctx.rect(
-      path[0][0],
-      path[0][1],
-      path[1][0] - path[0][0],
-      path[1][1] - path[0][1]
-    );
-    ctx.stroke();
-  };
+  //   const drawRect = (path, ctx) => {
+  //     ctx.beginPath();
+  //     ctx.rect(
+  //       path[0][0],
+  //       path[0][1],
+  //       path[1][0] - path[0][0],
+  //       path[1][1] - path[0][1]
+  //     );
+  //     ctx.stroke();
+  //   };
 
   const previewCircle = (path, ctx) => {
     if (path.length < 2) return;
