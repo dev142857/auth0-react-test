@@ -1,8 +1,8 @@
 export const MODES = {
   PAN: 0,
   PEN: 1,
-  SHADOW: 2,
-  RECT: 3,
+  BRUSH: 2,
+  SHADOW: 3,
   CIRCLE: 4,
 };
 

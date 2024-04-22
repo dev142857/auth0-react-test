@@ -12,11 +12,13 @@ const PaintPage = () => {
   //   if (!user) {
   //     return null;
   //   }
+  const [selBrush, setSelBrush] = useState(1);
   const settings = useRef({
     stroke: 20,
     color: "#000",
-    mode: MODES.SHADOW,
+    mode: selBrush,
   });
+  console.log(settings);
   let lastPath = [];
   const size = useWindowSize();
   const [showModal, setShowModal] = useState(false);
@@ -131,13 +133,15 @@ const PaintPage = () => {
   };
 
   const drawModes = (mode, ctx, point, path) => {
-    console.log(ctx);
+    // console.log(ctx);
     switch (mode) {
       case MODES.PEN:
+        ctx.lineWidth = 2;
         point ? previewPen(point, ctx) : drawPen(path, ctx);
         break;
-      case MODES.SHADOW:
-        ctx.lineJoin = ctx.lineCap = "butt";
+      case MODES.BRUSH:
+        ctx.lineJoin = ctx.lineCap = "round";
+        ctx.lineWidth = 10;
         // ctx.shadowBlur = 10;
         // ctx.shadowColor = "rgb(0, 0, 0)";
         if (point) {
@@ -146,12 +150,15 @@ const PaintPage = () => {
           drawPen(path, ctx);
         }
         break;
-      case MODES.CIRCLE:
+      case MODES.SHADOW:
+        ctx.lineJoin = ctx.lineCap = "round";
+        ctx.lineWidth = 10;
+        ctx.shadowBlur = 10;
+        ctx.shadowColor = "rgb(0, 0, 0)";
         if (point) {
-          path.length === 0 ? (path[0] = point) : (path[1] = point);
-          previewCircle(path, ctx);
+          previewPen(point, ctx);
         } else {
-          drawCircle(path, ctx);
+          drawPen(path, ctx);
         }
         break;
       default:
@@ -189,22 +196,22 @@ const PaintPage = () => {
   //     ctx.stroke();
   //   };
 
-  const previewCircle = (path, ctx) => {
-    if (path.length < 2) return;
-    drawCanvas(ctx);
-    getContext(settings.current, ctx); // reset context
-    drawCircle(path, ctx);
-  };
+  //   const previewCircle = (path, ctx) => {
+  //     if (path.length < 2) return;
+  //     drawCanvas(ctx);
+  //     getContext(settings.current, ctx); // reset context
+  //     drawCircle(path, ctx);
+  //   };
 
-  const getDistance = ([[p1X, p1Y], [p2X, p2Y]]) => {
-    return Math.sqrt(Math.pow(p1X - p2X, 2) + Math.pow(p1Y - p2Y, 2));
-  };
+  //   const getDistance = ([[p1X, p1Y], [p2X, p2Y]]) => {
+  //     return Math.sqrt(Math.pow(p1X - p2X, 2) + Math.pow(p1Y - p2Y, 2));
+  //   };
 
-  const drawCircle = (path, ctx) => {
-    ctx.beginPath();
-    ctx.arc(path[0][0], path[0][1], getDistance(path), 0, 2 * Math.PI);
-    ctx.stroke();
-  };
+  //   const drawCircle = (path, ctx) => {
+  //     ctx.beginPath();
+  //     ctx.arc(path[0][0], path[0][1], getDistance(path), 0, 2 * Math.PI);
+  //     ctx.stroke();
+  //   };
 
   const previewPen = (point, ctx) => {
     if (lastPath.length === 0) {
@@ -272,11 +279,13 @@ const PaintPage = () => {
           />
           <PaintBody
             showModal={showModal}
+            setShowModal={setShowModal}
             settings={settings}
             canvas={canvas}
             width={width}
             height={height}
             onPointerDown={onPointerDown}
+            setSelBrush={setSelBrush}
           />
         </div>
       </div>

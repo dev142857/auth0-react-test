@@ -4,15 +4,21 @@ import BrushSettings from "./BrushSettings";
 
 const PaintBody = ({
   showModal,
+  setShowModal,
   settings,
   width,
   height,
   onPointerDown,
   canvas,
+  setSelBrush,
 }) => {
   return (
     <div className="h-full w-full paint-board bg-white">
-      {showModal ? <BrushSettings /> : ""}
+      {showModal ? (
+        <BrushSettings setSelBrush={setSelBrush} setShowModal={setShowModal} />
+      ) : (
+        ""
+      )}
       <canvas
         ref={canvas}
         width={width}
