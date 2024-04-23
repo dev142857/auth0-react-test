@@ -60,39 +60,6 @@ const PaintPage = () => {
     drawCanvas(getContext());
     render();
   };
-  const onPointerDown = (e) => {
-    prevent(e);
-    const ctx = getContext(settings.current);
-    coords.current = [e.clientX, e.clientY];
-    if (settings.current.mode === MODES.PAN) {
-      moving.current = true;
-      return;
-    }
-    setDrawing(true);
-    draw.current = true;
-    const point = getPoints(e, context.current);
-    lastPath = [];
-    drawModes(settings.current.mode, ctx, point, lastPath);
-  };
-
-  const onPointerUp = (e) => {
-    prevent(e);
-    if (settings.current.mode === MODES.PAN) {
-      moving.current = false;
-      return;
-    }
-    setDrawing(false);
-    draw.current = false;
-    if (lastPath.length > 0) {
-      history.current.push({
-        ...settings.current,
-        path: lastPath,
-      });
-      redoHistory.current = [];
-      lastPath = [];
-      drawCanvas(getContext());
-    }
-  };
 
   const getPreviewActiveStyles = () => {
     const styles = {
@@ -128,7 +95,40 @@ const PaintPage = () => {
     coords.current = [x2, y2];
     updatePreview();
   };
+  const onPointerDown = (e) => {
+    prevent(e);
+    const ctx = getContext(settings.current);
+    coords.current = [e.clientX, e.clientY];
+    if (settings.current.mode === MODES.PAN) {
+      moving.current = true;
+      return;
+    }
+    setDrawing(true);
+    draw.current = true;
+    const point = getPoints(e, context.current);
+    lastPath = [];
+    drawModes(settings.current.mode, ctx, point, lastPath);
+  };
 
+  const onPointerUp = (e) => {
+    prevent(e);
+    if (settings.current.mode === MODES.PAN) {
+      moving.current = false;
+      return;
+    }
+    setDrawing(false);
+    draw.current = false;
+    if (lastPath.length > 0) {
+      history.current.push({
+        ...settings.current,
+        path: lastPath,
+      });
+      redoHistory.current = [];
+      lastPath = [];
+      console.log(getContext());
+      drawCanvas(getContext());
+    }
+  };
   const onPointerMove = (e) => {
     prevent(e);
     const ctx = getContext(settings);
@@ -253,6 +253,7 @@ const PaintPage = () => {
     const outerRadius = 10;
     const innerRadius = 5;
     ctx.lineWidth = 1;
+    ctx.shadowBlur = 0;
     const step = Math.PI / spikes;
     let rotation = (Math.PI / 2) * 3; // Start at the top
 
@@ -281,6 +282,7 @@ const PaintPage = () => {
     const outerRadius = 10;
     const innerRadius = 5;
     ctx.lineWidth = 1;
+    ctx.shadowBlur = 0;
     const step = Math.PI / spikes;
     let rotation = (Math.PI / 2) * 3; // Start at the top
     let x = point[0];
