@@ -6,11 +6,13 @@ export const PaintHeader = ({
   showModal,
   undoCanvas,
   redoCanvas,
+  curlineWidth,
 }) => {
   const handleModal = () => {
     setShowModal(!showModal);
     console.log(showModal);
   };
+  console.log(curlineWidth);
   return (
     <div className="w-full flex justify-between border">
       <div className="paint-header-icon m-2">HOME</div>
@@ -18,7 +20,7 @@ export const PaintHeader = ({
       <div className="paint-header-icon m-2">
         <button onClick={handleModal}>Brush</button>
       </div>
-      <div className="paint-header-icon m-2">Size</div>
+      <div className="paint-header-icon m-2">Size:{curlineWidth}</div>
       <div className="paint-header-icon m-2">
         <button onClick={undoCanvas}>Undo</button>
       </div>

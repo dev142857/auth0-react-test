@@ -11,11 +11,16 @@ const PaintBody = ({
   onPointerDown,
   canvas,
   setSelBrush,
+  setCurLineWidth,
 }) => {
   return (
     <div className="h-full w-full paint-board bg-white">
       {showModal ? (
-        <BrushSettings setSelBrush={setSelBrush} setShowModal={setShowModal} />
+        <BrushSettings
+          setSelBrush={setSelBrush}
+          setShowModal={setShowModal}
+          setCurLineWidth={setCurLineWidth}
+        />
       ) : (
         ""
       )}

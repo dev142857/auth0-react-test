@@ -12,6 +12,7 @@ const PaintPage = () => {
   //   if (!user) {
   //     return null;
   //   }
+  const [curlineWidth, setCurLineWidth] = useState(2);
   const [selBrush, setSelBrush] = useState(4);
   let settings = useRef({
     stroke: 20,
@@ -342,7 +343,6 @@ const PaintPage = () => {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [width, height]);
-
   return (
     <PageLayout>
       <div className="content-layout">
@@ -352,6 +352,7 @@ const PaintPage = () => {
             setShowModal={setShowModal}
             undoCanvas={undoCanvas}
             redoCanvas={redoCanvas}
+            curlineWidth={curlineWidth}
           />
           <PaintBody
             showModal={showModal}
@@ -362,6 +363,7 @@ const PaintPage = () => {
             height={height}
             onPointerDown={onPointerDown}
             setSelBrush={setSelBrush}
+            setCurLineWidth={setCurLineWidth}
           />
         </div>
       </div>
