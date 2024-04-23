@@ -3,7 +3,7 @@ export const MODES = {
   PEN: 1,
   BRUSH: 2,
   SHADOW: 3,
-  CIRCLE: 4,
+  SHAPE: 4,
 };
 
 export const PAN_LIMIT_WIDTH = 3000;

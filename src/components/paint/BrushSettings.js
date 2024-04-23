@@ -13,6 +13,8 @@ const BrushSettings = ({ setSelBrush, setShowModal }) => {
         <button onClick={() => selectBrush(2)}>BRUSH</button>
         <br />
         <button onClick={() => selectBrush(3)}>SHADOW</button>
+        <br />
+        <button onClick={() => selectBrush(4)}>SHAPE</button>
       </div>
     </div>
   );

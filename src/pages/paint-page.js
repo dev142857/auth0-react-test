@@ -12,7 +12,7 @@ const PaintPage = () => {
   //   if (!user) {
   //     return null;
   //   }
-  const [selBrush, setSelBrush] = useState(1);
+  const [selBrush, setSelBrush] = useState(4);
   let settings = useRef({
     stroke: 20,
     color: "#000",
@@ -137,7 +137,6 @@ const PaintPage = () => {
     const point = getPoints(e, ctx);
     drawModes(settings.current.mode, ctx, point, lastPath);
   };
-
   const drawModes = (mode, ctx, point, path) => {
     switch (mode) {
       case MODES.PEN:
@@ -166,6 +165,13 @@ const PaintPage = () => {
           previewPen(point, ctx);
         } else {
           drawPen(path, ctx);
+        }
+        break;
+      case MODES.SHAPE:
+        if (point) {
+          previewStar(point, ctx);
+        } else {
+          path.forEach((p) => drawStar(p, ctx));
         }
         break;
       default:
@@ -238,6 +244,67 @@ const PaintPage = () => {
     }
     ctx.stroke();
   };
+  const previewStar = (point, ctx) => {
+    if (lastPath.length === 0) {
+      ctx.beginPath();
+      ctx.moveTo(point[0], point[1]);
+    }
+    const spikes = 5;
+    const outerRadius = 10;
+    const innerRadius = 5;
+    ctx.lineWidth = 1;
+    const step = Math.PI / spikes;
+    let rotation = (Math.PI / 2) * 3; // Start at the top
+
+    ctx.beginPath();
+    ctx.moveTo(point[0], point[1] - outerRadius); // Move to the top point
+
+    for (let i = 0; i < spikes; i++) {
+      let x = point[0] + Math.cos(rotation) * outerRadius;
+      let y = point[1] + Math.sin(rotation) * outerRadius;
+      ctx.lineTo(x, y); // Draw line to outer vertex
+      rotation += step;
+
+      x = point[0] + Math.cos(rotation) * innerRadius;
+      y = point[1] + Math.sin(rotation) * innerRadius;
+      ctx.lineTo(x, y); // Draw line to inner vertex
+      rotation += step;
+    }
+
+    ctx.lineTo(point[0], point[1] - outerRadius); // Connect back to the top point
+    ctx.closePath();
+    ctx.stroke();
+    lastPath.push(point);
+  };
+  const drawStar = (point, ctx) => {
+    const spikes = 5;
+    const outerRadius = 10;
+    const innerRadius = 5;
+    ctx.lineWidth = 1;
+    const step = Math.PI / spikes;
+    let rotation = (Math.PI / 2) * 3; // Start at the top
+    let x = point[0];
+    let y = point[1];
+
+    ctx.beginPath();
+    ctx.moveTo(point[0], point[1] - outerRadius); // Move to the top point
+
+    for (let i = 0; i < spikes; i++) {
+      x = point[0] + Math.cos(rotation) * outerRadius;
+      y = point[1] + Math.sin(rotation) * outerRadius;
+      ctx.lineTo(x, y); // Draw line to outer vertex
+      rotation += step;
+
+      x = point[0] + Math.cos(rotation) * innerRadius;
+      y = point[1] + Math.sin(rotation) * innerRadius;
+      ctx.lineTo(x, y); // Draw line to inner vertex
+      rotation += step;
+    }
+
+    ctx.lineTo(point[0], point[1] - outerRadius); // Connect back to the top point
+    ctx.closePath();
+    ctx.stroke();
+  };
 
   const clearCanvas = (ctx) => {
     ctx.save();
@@ -299,5 +366,4 @@ const PaintPage = () => {
     </PageLayout>
   );
 };
-
 export default PaintPage;
