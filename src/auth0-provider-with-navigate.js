@@ -9,8 +9,8 @@ export const Auth0ProviderWithNavigate = ({ children }) => {
   const clientId = process.env.REACT_APP_AUTH0_CLIENT_ID;
   const redirectUri =
     process.env.REACT_APP_VERCEL_ENV === "production"
-      ? `https://${window.location.hostname}/callback`
-      : 1;
+      ? 1
+      : process.env.REACT_APP_AUTH0_CALLBACK_URL;
   console.log(domain);
   console.log(clientId);
   console.log(redirectUri);
